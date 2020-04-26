@@ -1,0 +1,7 @@
+.idea/
+output/
+.DS_Store/
+
+*.swp
+
+main
