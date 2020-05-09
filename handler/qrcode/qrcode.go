@@ -19,7 +19,7 @@ const (
 func Generate(ctx *gin.Context) {
 	foodIDStr, ok := ctx.GetQuery("food_id")
 	if !ok {
-		log.Print("[GenerateQRCode] no food_id specified")
+		log.Print("[QRCodeGenerate] no food_id specified")
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"reason": "no food_id specified",
@@ -29,7 +29,7 @@ func Generate(ctx *gin.Context) {
 
 	foodID, err := strconv.ParseInt(foodIDStr, 10, 64)
 	if err != nil {
-		log.Printf("[GenerateQRCode] invalid food_id: %q, err: %v", foodIDStr, err)
+		log.Printf("[QRCodeGenerate] invalid food_id: %q, err: %v", foodIDStr, err)
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"reason": "invalid food_id",
@@ -41,7 +41,7 @@ func Generate(ctx *gin.Context) {
 	qrcodeName := fmt.Sprintf(qrCodePngTpl, foodID)
 	err = qrcode.WriteFile(url, qrcode.Medium, 256, qrcodeName)
 	if err != nil {
-		log.Printf("[GenerateQRCode] write qrcode to file failed, err: %v", err)
+		log.Printf("[QRCodeGenerate] write qrcode to file failed, err: %v", err)
 
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"reason": "call qrcode generator failed",
@@ -56,7 +56,7 @@ func Generate(ctx *gin.Context) {
 func Retrieve(ctx *gin.Context) {
 	foodIdStr, ok := ctx.GetQuery("food_id")
 	if !ok {
-		log.Print("[GenerateQRCode] bad qrcode: no food_id specified")
+		log.Print("[QRCodeRetrieve] bad qrcode: no food_id specified")
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"reason": "bad qrcode, no food_id specified",
