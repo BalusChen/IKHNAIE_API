@@ -2,6 +2,7 @@ package qrcode
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,7 +12,7 @@ import (
 )
 
 const (
-	qrCodeURLTpl = "127.0.0.1:9877/ikhnaie/v1/qrcode/retrieve?food_id=%d"
+	qrCodeURLTpl = "192.168.1.5:9877/ikhnaie/v1/qrcode/retrieve?food_id=%d"
 	qrCodePngTpl = "assets/images/qrcode/%d.png"
 )
 
@@ -37,7 +38,8 @@ func Generate(ctx *gin.Context) {
 	}
 
 	url := fmt.Sprintf(qrCodeURLTpl, foodID)
-	err = qrcode.WriteFile(url, qrcode.Medium, 256, fmt.Sprintf(qrCodePngTpl, foodID))
+	qrcodeName := fmt.Sprintf(qrCodePngTpl, foodID)
+	err = qrcode.WriteFile(url, qrcode.Medium, 256, qrcodeName)
 	if err != nil {
 		log.Printf("[GenerateQRCode] write qrcode to file failed, err: %v", err)
 
@@ -46,6 +48,9 @@ func Generate(ctx *gin.Context) {
 		})
 		return
 	}
+
+	data, _ := ioutil.ReadFile(qrcodeName)
+	_, _ = ctx.Writer.Write(data)
 }
 
 func Retrieve(ctx *gin.Context) {
