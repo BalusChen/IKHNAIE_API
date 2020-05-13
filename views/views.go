@@ -1,7 +1,10 @@
 package views
 
 import (
+	"net/http"
+
 	"github.com/BalusChen/IKHNAIE_API/handler/product"
+	"github.com/BalusChen/IKHNAIE_API/handler/qrcode"
 	"github.com/BalusChen/IKHNAIE_API/handler/transaction"
 	"github.com/BalusChen/IKHNAIE_API/handler/user"
 	"github.com/gin-gonic/gin"
@@ -10,15 +13,27 @@ import (
 func InitRoutes(e *gin.Engine) {
 	r := e.Group("ikhnaie/v1/")
 
+	r.GET("ping", func(ctx *gin.Context) {
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.JSON(http.StatusOK, gin.H{
+			"cartoon": "Tom and Jerry",
+			"names":   []string{"Tom", "Jerry", "Sam"},
+		})
+	})
+
 	initUserRoutes(r)
 	initProductRoutes(r)
 	initTransactionRoutes(r)
+	initQRCodeRoutes(r)
 }
 
 func initUserRoutes(r *gin.RouterGroup) {
 	router := r.Group("user/")
 
 	router.GET("info", user.GetInformation)
+	router.POST("register", user.Register)
+	router.POST("login", user.Login)
+	router.GET("check", user.Check)
 }
 
 func initProductRoutes(r *gin.RouterGroup) {
@@ -30,5 +45,13 @@ func initProductRoutes(r *gin.RouterGroup) {
 func initTransactionRoutes(r *gin.RouterGroup) {
 	router := r.Group("transaction/")
 
-	router.GET("info", transaction.GetInformation)
+	router.GET("history", transaction.GetHistory)
+	router.GET("add", transaction.AddTransaction)
+}
+
+func initQRCodeRoutes(r *gin.RouterGroup) {
+	router := r.Group("qrcode/")
+
+	router.GET("generate", qrcode.Generate)
+	router.GET("retrieve", qrcode.Retrieve)
 }

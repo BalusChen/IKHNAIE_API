@@ -2,4 +2,9 @@ module github.com/BalusChen/IKHNAIE_API
 
 go 1.14
 
-require github.com/gin-gonic/gin v1.6.2
+require (
+	github.com/gin-gonic/gin v1.6.2
+	github.com/hyperledger/fabric-sdk-go v1.0.0-beta1
+	github.com/jinzhu/gorm v1.9.12
+	github.com/skip2/go-qrcode v0.0.0-20191027152451-9434209cb086
+)

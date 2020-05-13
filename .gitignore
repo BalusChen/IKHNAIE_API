@@ -1,6 +1,7 @@
 .idea/
 output/
 .DS_Store/
+assets/
 
 *.swp
 
