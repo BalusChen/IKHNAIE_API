@@ -13,12 +13,11 @@ import (
 )
 
 func main() {
-	ikhnaieCC()
 	router := gin.Default()
 
 	views.InitRoutes(router)
 
-	// panic(router.Run(":9877"))
+	panic(router.Run(":9877"))
 }
 
 const (

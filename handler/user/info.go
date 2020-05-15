@@ -47,16 +47,24 @@ func List(ctx *gin.Context) {
 	// 允许跨域
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
-	status, err := strconv.ParseInt(ctx.Query("status"), 10, 32)
-	if err != nil || (status != model.UserStatus_Inactive && status != model.UserStatus_Active) {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": http.StatusBadRequest,
-			"status_msg":  StatusMsg_BadRequest,
-		})
-		return
+	var status []int32
+	statusStr, ok := ctx.GetQuery("status")
+	if !ok {
+		status = []int32{model.UserStatus_Active, model.UserStatus_Inactive}
+	} else {
+		oneStatus, err := strconv.ParseInt(statusStr, 10, 32)
+		if err != nil || (oneStatus != model.UserStatus_Inactive && oneStatus != model.UserStatus_Active) {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"status_code": http.StatusBadRequest,
+				"status_msg":  StatusMsg_BadRequest,
+			})
+			return
+		}
+
+		status = []int32{int32(oneStatus)}
 	}
 
-	users, err := dao.GetUsersByStatus(ctx, int32(status))
+	users, err := dao.GetUsersByStatus(ctx, status)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": http.StatusInternalServerError,
