@@ -35,7 +35,7 @@ type Client struct {
 
 	// Same for each peer
 	ChannelID string
-	CCCfg CCConfig
+	CCCfg     CCConfig
 }
 
 func New(cfgPath, org, admin, user string, ccCfg CCConfig) *Client {
@@ -46,7 +46,7 @@ func New(cfgPath, org, admin, user string, ccCfg CCConfig) *Client {
 		OrgUser:    user,
 
 		ChannelID: "mychannel",
-		CCCfg: ccCfg,
+		CCCfg:     ccCfg,
 	}
 
 	sdk, err := fabsdk.New(config.FromFile(client.ConfigPath))
