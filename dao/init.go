@@ -9,7 +9,7 @@ var (
 	ikhnaieDB *gorm.DB
 )
 
-func init()  {
+func init() {
 	var err error
 	ikhnaieDB, err = gorm.Open("mysql", "root:sqlcareful@/ikhnaie?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
