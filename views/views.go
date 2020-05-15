@@ -22,6 +22,7 @@ func InitRoutes(e *gin.Engine) {
 	})
 
 	initUserRoutes(r)
+	initAdminRoutes(r)
 	initProductRoutes(r)
 	initTransactionRoutes(r)
 	initQRCodeRoutes(r)
@@ -31,15 +32,23 @@ func initUserRoutes(r *gin.RouterGroup) {
 	router := r.Group("user/")
 
 	router.GET("info", user.GetInformation)
+	router.GET("list", user.List)
 	router.POST("register", user.Register)
 	router.POST("login", user.Login)
 	router.GET("check", user.Check)
+}
+
+func initAdminRoutes(r *gin.RouterGroup) {
+	router := r.Group("admin/")
+
+	router.GET("info")
 }
 
 func initProductRoutes(r *gin.RouterGroup) {
 	router := r.Group("product/")
 
 	router.GET("info", product.GetInformation)
+	router.POST("add", product.AddProduct)
 }
 
 func initTransactionRoutes(r *gin.RouterGroup) {

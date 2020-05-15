@@ -7,5 +7,9 @@ import (
 )
 
 func GetInformation(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "hello product")
+	ctx.String(http.StatusOK, "TODO: get product information")
+}
+
+func AddProduct(ctx *gin.Context) {
+	ctx.String(http.StatusOK, "TODO: add new product")
 }

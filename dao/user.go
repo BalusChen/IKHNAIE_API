@@ -62,6 +62,30 @@ func GetUser(ctx context.Context, userName, userId string) (bool, error) {
 	return true, nil
 }
 
+func GetUsersByStatus(ctx context.Context, status int32) ([]*model.User, error) {
+	var users []*model.User
+	err := ikhnaieDB.Where("status = (?)", status).Find(&users).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		} else {
+			return nil, err
+		}
+	}
+	return users, nil
+}
+
+func UpdateUserStatus(ctx context.Context, userId string, status int32) error {
+	var user model.User
+	err := ikhnaieDB.Where("user_id = (?)", userId).Assign(map[string]interface{}{
+		"status": status,
+	}).First(&user).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func UpdateUserLastLoginTime(ctx context.Context, userId string, t time.Time) error {
 	var user model.User
 	err := ikhnaieDB.Where("user_id = ?", userId).Assign(map[string]interface{}{
