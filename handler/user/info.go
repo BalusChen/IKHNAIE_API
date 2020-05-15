@@ -30,7 +30,7 @@ const (
 	StatusMsg_InactiveUser         = "该用户尚未被准入，请联系管理员"
 )
 
-func GetInformation(ctx *gin.Context) {
+func Info(ctx *gin.Context) {
 	// 允许跨域
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 

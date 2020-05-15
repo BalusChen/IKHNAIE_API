@@ -31,7 +31,7 @@ func InitRoutes(e *gin.Engine) {
 func initUserRoutes(r *gin.RouterGroup) {
 	router := r.Group("user/")
 
-	router.GET("info", user.GetInformation)
+	router.GET("info", user.Info)
 	router.GET("list", user.List)
 	router.POST("register", user.Register)
 	router.POST("login", user.Login)
