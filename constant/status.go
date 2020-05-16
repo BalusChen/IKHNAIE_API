@@ -5,8 +5,9 @@ const (
 	StatusCode_OK                    = 200
 	StatusCode_Base                  = 50000
 	StatusCode_MethodONotImplemented = StatusCode_Base + 1
+	StatusCode_InvalidParams 		 = StatusCode_Base + 2
 	StatusMsg_OK                     = "成功"
-	StatusMsg_BadRequest             = "参数错误"
+	StatusMsg_InvalidParams          = "参数错误"
 	StatusMsg_ServerInternalError    = "服务器内部错误"
 	StatusMsg_MethodNotImplemented   = "该接口尚未实现哦"
 

@@ -33,7 +33,7 @@ func Register(ctx *gin.Context) {
 		log.Printf("[UserRegister] invalid params: %v", ctx.Params)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": http.StatusBadRequest,
-			"status_msg":  constant.StatusMsg_BadRequest,
+			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
 	}
@@ -132,7 +132,7 @@ func operateAccessRight(ctx *gin.Context, operator int32) {
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": http.StatusBadRequest,
-			"status_msg":  constant.StatusMsg_BadRequest,
+			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
 	}
