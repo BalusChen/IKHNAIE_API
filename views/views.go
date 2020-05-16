@@ -13,21 +13,12 @@ import (
 func InitRoutes(e *gin.Engine) {
 	r := e.Group("ikhnaie/v1/")
 
-	r.GET("ping", func(ctx *gin.Context) {
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		ctx.JSON(http.StatusOK, gin.H{
-			"cartoon": "Tom and Jerry",
-			"names":   []string{"Tom", "Jerry", "Sam"},
-		})
-	})
-
-	r.Static("assets/", "./assets")
-
 	initUserRoutes(r)
 	initAdminRoutes(r)
 	initProductRoutes(r)
 	initTransactionRoutes(r)
 	initQRCodeRoutes(r)
+	initMiscRoutes(r)
 }
 
 func initUserRoutes(r *gin.RouterGroup) {
@@ -69,4 +60,16 @@ func initQRCodeRoutes(r *gin.RouterGroup) {
 
 	router.GET("generate", qrcode.Generate)
 	router.GET("retrieve", qrcode.Retrieve)
+}
+
+func initMiscRoutes(r *gin.RouterGroup) {
+	r.GET("ping", func(ctx *gin.Context) {
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.JSON(http.StatusOK, gin.H{
+			"cartoon": "Tom and Jerry",
+			"names":   []string{"Tom", "Jerry", "Sam"},
+		})
+	})
+
+	r.Static("assets/", "./assets")
 }
