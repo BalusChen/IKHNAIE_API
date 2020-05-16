@@ -10,6 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	accessRightOperator_Grant  = 1
+	accessRightOperator_Revoke = 2
+)
+
 type userInfo struct {
 	UserName     string `form:"username" json:"username" binding:"required"`
 	UserID       string `form:"user_id" json:"user_id" binding:"required"`
@@ -105,6 +110,48 @@ func Login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"status_code": StatusCode_OK,
 		"status_msg":  StatusMsg_LoginOK,
+	})
+}
+
+func GrantAccessRight(ctx *gin.Context) {
+	operateAccessRight(ctx, accessRightOperator_Grant)
+}
+
+func RevokeAccessRight(ctx *gin.Context) {
+	operateAccessRight(ctx, accessRightOperator_Revoke)
+}
+
+func operateAccessRight(ctx *gin.Context, operator int32) {
+	// 允许跨域
+	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	userId, found := ctx.GetQuery("user_id")
+	if !found {
+		log.Printf("[operateAccessRight] invalid params: %v", ctx.Params)
+
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status_code": http.StatusBadRequest,
+			"status_msg":  StatusMsg_BadRequest,
+		})
+		return
+	}
+
+	var err error
+	if operator == accessRightOperator_Grant {
+		err = dao.UpdateUserStatus(ctx, userId, model.UserStatus_Active)
+	} else {
+		err = dao.UpdateUserStatus(ctx, userId, model.UserStatus_Inactive)
+	}
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"status_code": http.StatusInternalServerError,
+			"status_msg":  StatusMsg_ServerInternalError,
+		})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status_code": StatusCode_OK,
+		"status_msg":  StatusMsg_OK,
 	})
 }
 

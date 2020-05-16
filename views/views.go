@@ -36,6 +36,8 @@ func initUserRoutes(r *gin.RouterGroup) {
 	router.POST("register", user.Register)
 	router.POST("login", user.Login)
 	router.GET("check", user.Check)
+	router.GET("access/grant", user.GrantAccessRight)
+	router.GET("access/revoke", user.RevokeAccessRight)
 }
 
 func initAdminRoutes(r *gin.RouterGroup) {

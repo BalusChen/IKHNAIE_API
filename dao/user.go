@@ -77,10 +77,9 @@ func GetUsersByStatus(ctx context.Context, status []int32) ([]*model.User, error
 
 func UpdateUserStatus(ctx context.Context, userId string, status int32) error {
 	var user model.User
-	err := ikhnaieDB.Where("user_id = (?)", userId).Assign(map[string]interface{}{
-		"status": status,
-	}).First(&user).Error
+	err := ikhnaieDB.Model(&user).Where("user_id = (?)", userId).Update("status", status).Error
 	if err != nil {
+		log.Printf("[UpdateUsersStatus] update db record failed, user_id: %s, status: %d, err: %v", userId, status, err)
 		return err
 	}
 	return nil

@@ -3,6 +3,7 @@ package user
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/BalusChen/IKHNAIE_API/dao"
 	"github.com/BalusChen/IKHNAIE_API/model"
@@ -29,6 +30,15 @@ const (
 	StatusMsg_UserExist            = "该用户已存在"
 	StatusMsg_InactiveUser         = "该用户尚未被准入，请联系管理员"
 )
+
+type userInfo2 struct {
+	UserName     string    `json:"user_name"`
+	UserID       string    `json:"user_id"`
+	Status       int32     `json:"status"`
+	Organization string    `json:"organization"`
+	RegisterTime time.Time `json:"register_time"`
+	LastLogin    time.Time `json:"last_login"`
+}
 
 func Info(ctx *gin.Context) {
 	// 允许跨域
@@ -73,8 +83,18 @@ func List(ctx *gin.Context) {
 		return
 	}
 
+	userInfos := make([]userInfo2, len(users))
+	for i := 0; i < len(users); i++ {
+		userInfos[i].UserName = users[i].UserName
+		userInfos[i].UserID = users[i].UserID
+		userInfos[i].Status = users[i].Status
+		userInfos[i].Organization = users[i].Organization
+		userInfos[i].RegisterTime = users[i].RegisterTime
+		userInfos[i].LastLogin = users[i].LastLogin
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
-		"users":       users,
+		"users":       userInfos,
 		"status_code": http.StatusOK,
 		"status_msg":  StatusMsg_OK,
 	})
