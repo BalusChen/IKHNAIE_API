@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/BalusChen/IKHNAIE_API/constant"
 	"github.com/BalusChen/IKHNAIE_API/dao"
 	"github.com/BalusChen/IKHNAIE_API/model"
 	"github.com/gin-gonic/gin"
@@ -32,7 +33,7 @@ func Register(ctx *gin.Context) {
 		log.Printf("[UserRegister] invalid params: %v", ctx.Params)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": http.StatusBadRequest,
-			"status_msg":  StatusMsg_BadRequest,
+			"status_msg":  constant.StatusMsg_BadRequest,
 		})
 		return
 	}
@@ -42,14 +43,14 @@ func Register(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": http.StatusInternalServerError,
-			"status_msg":  StatusMsg_ServerInternalError,
+			"status_msg":  constant.StatusMsg_ServerInternalError,
 		})
 		return
 	}
 	if exist {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": StatusCode_UserExist,
-			"status_msg":  StatusMsg_UserExist,
+			"status_code": constant.StatusCode_UserExist,
+			"status_msg":  constant.StatusMsg_UserExist,
 		})
 		return
 	}
@@ -68,14 +69,14 @@ func Register(ctx *gin.Context) {
 	if err := dao.RegisterUser(ctx, userModel); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": http.StatusInternalServerError,
-			"status_msg":  StatusMsg_ServerInternalError,
+			"status_msg":  constant.StatusMsg_ServerInternalError,
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"status_code": StatusCode_OK,
-		"status_msg":  StatusMsg_RegisterOK,
+		"status_code": constant.StatusCode_OK,
+		"status_msg":  constant.StatusMsg_RegisterOK,
 	})
 }
 
@@ -91,16 +92,16 @@ func Login(ctx *gin.Context) {
 	userModel := dao.GetUserByUserName(ctx, userName)
 	if userModel == nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": StatusCode_UserNotFound,
-			"status_msg":  StatusMsg_UserNotFound,
+			"status_code": constant.StatusCode_UserNotFound,
+			"status_msg":  constant.StatusMsg_UserNotFound,
 		})
 		return
 	}
 
 	if password != userModel.Password {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": StatusCode_WrongPassword,
-			"status_msg":  StatusMsg_WrongPassword,
+			"status_code": constant.StatusCode_WrongPassword,
+			"status_msg":  constant.StatusMsg_WrongPassword,
 		})
 		return
 	}
@@ -108,8 +109,8 @@ func Login(ctx *gin.Context) {
 	_ = dao.UpdateUserLastLoginTime(ctx, userModel.UserID, time.Now())
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"status_code": StatusCode_OK,
-		"status_msg":  StatusMsg_LoginOK,
+		"status_code": constant.StatusCode_OK,
+		"status_msg":  constant.StatusMsg_LoginOK,
 	})
 }
 
@@ -131,7 +132,7 @@ func operateAccessRight(ctx *gin.Context, operator int32) {
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": http.StatusBadRequest,
-			"status_msg":  StatusMsg_BadRequest,
+			"status_msg":  constant.StatusMsg_BadRequest,
 		})
 		return
 	}
@@ -145,13 +146,13 @@ func operateAccessRight(ctx *gin.Context, operator int32) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": http.StatusInternalServerError,
-			"status_msg":  StatusMsg_ServerInternalError,
+			"status_msg":  constant.StatusMsg_ServerInternalError,
 		})
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"status_code": StatusCode_OK,
-		"status_msg":  StatusMsg_OK,
+		"status_code": constant.StatusCode_OK,
+		"status_msg":  constant.StatusMsg_OK,
 	})
 }
 
@@ -160,7 +161,7 @@ func Check(ctx *gin.Context) {
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"status_code": StatusCode_MethodONotImplemented,
-		"status_msg":  StatusMsg_MethodNotImplemented,
+		"status_code": constant.StatusCode_MethodONotImplemented,
+		"status_msg":  constant.StatusMsg_MethodNotImplemented,
 	})
 }
