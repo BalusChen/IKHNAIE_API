@@ -108,7 +108,14 @@ func Login(ctx *gin.Context) {
 
 	_ = dao.UpdateUserLastLoginTime(ctx, userModel.UserID, time.Now())
 
+	user := userInfo{
+		UserName:     userModel.UserName,
+		UserID:       userModel.UserID,
+		Password:     userModel.Password,
+		Organization: userModel.Organization,
+	}
 	ctx.JSON(http.StatusOK, gin.H{
+		"user":        user,
 		"status_code": constant.StatusCode_OK,
 		"status_msg":  constant.StatusMsg_LoginOK,
 	})
