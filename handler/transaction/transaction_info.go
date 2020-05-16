@@ -80,13 +80,6 @@ func GetHistory(ctx *gin.Context) {
 		return
 	}
 
-	product := types.Product{
-		FoodID:    1, // TODO: type of FoodID
-		FoodName:  "土豆",
-		Birthday:  time.Now(),
-		ShelfLife: 100,
-	}
-
 	log.Printf("[GetHistory] query transaction history for foodID=%s\n", foodID)
 
 	transactionHistory, err := client.GetTransactionHistory(foodID)
@@ -101,7 +94,6 @@ func GetHistory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"status_code":         constant.StatusCode_OK,
 		"status_msg":          constant.StatusMsg_OK,
-		"product_info":        product,
 		"transaction_history": transactionHistory,
 	})
 }
