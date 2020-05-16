@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/BalusChen/IKHNAIE_API/constant"
 	"github.com/gin-gonic/gin"
 	"github.com/skip2/go-qrcode"
 )
@@ -22,7 +23,8 @@ func Generate(ctx *gin.Context) {
 		log.Print("[QRCodeGenerate] no food_id specified")
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"reason": "no food_id specified",
+			"status_code": constant.StatusCode_InvalidParams,
+			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
 	}
@@ -32,7 +34,8 @@ func Generate(ctx *gin.Context) {
 		log.Printf("[QRCodeGenerate] invalid food_id: %q, err: %v", foodIDStr, err)
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"reason": "invalid food_id",
+			"status_code": constant.StatusCode_InvalidParams,
+			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
 	}
@@ -44,7 +47,8 @@ func Generate(ctx *gin.Context) {
 		log.Printf("[QRCodeGenerate] write qrcode to file failed, err: %v", err)
 
 		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"reason": "call qrcode generator failed",
+			"status_code": http.StatusInternalServerError,
+			"status_msg":  constant.StatusMsg_ServerInternalError,
 		})
 		return
 	}
@@ -59,7 +63,8 @@ func Retrieve(ctx *gin.Context) {
 		log.Print("[QRCodeRetrieve] bad qrcode: no food_id specified")
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"reason": "bad qrcode, no food_id specified",
+			"status_code": constant.StatusCode_InvalidParams,
+			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
 	}
