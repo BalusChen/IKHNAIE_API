@@ -1,34 +1,69 @@
 package transaction
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/BalusChen/IKHNAIE/types"
 	"github.com/BalusChen/IKHNAIE_API/client"
 	"github.com/BalusChen/IKHNAIE_API/constant"
 	"github.com/gin-gonic/gin"
 )
 
-type Transaction struct {
-	// FoodID  int64   `json:"food_id"` /* key */
-	TradeTime  time.Time `json:"trade_time"`  // 交易时间
-	TradePlace string    `json:"trade_place"` // 交易地点
-	SellerName string    `json:"seller_name"` // 售卖者名字
-	SellerID   string    `json:"seller_id"`   // 售卖者身份证号码
-	BuyerName  string    `json:"buyer_name"`  // 购买者名字
-	BuyerID    string    `json:"buyer_id"`    // 购买者身份证号码
-	Number     int64     `json:"number"`      // 交易数目
-	Price      float64   `json:"price"`       // 单价
+type transactionInfo struct {
+	FoodID     string  `form:"food_id" binding:"required"`
+	SellerName string  `form:"seller_name" binding:"required"`
+	SellerID   string  `form:"seller_id" binding:"required"`
+	BuyerName  string  `form:"buyer_name" binding:"required"`
+	BuyerID    string  `form:"buyer_id" binding:"required"`
+	TradePlace string  `form:"trade_place" binding:"required"`
+	Number     int64   `form:"number" binding:"required"`
+	Price      float64 `form:"price" binding:"required"`
 }
 
-type Product struct {
-	FoodID       string    `json:"food_id"`       // 农产品 ID（唯一标识）
-	FoodName     string    `json:"food_name"`     // 农产品名
-	BirthAddress string    `json:"birth_address"` // 产地
-	Birthday     time.Time `json:"birthday"`      // 生产日期
-	ShelfLife    int       `json:"shelf_life"`    // 保质期（天）
-	// Ingredients []Product     `json:"ingredients"` // 组成材料
+func AddTransaction(ctx *gin.Context) {
+	// 允许跨域
+	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	var transaction transactionInfo
+	if err := ctx.ShouldBind(&transaction); err != nil {
+		log.Printf("[AddTransaction] invalid params: %+v", ctx.Params)
+
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status_code": constant.StatusCode_InvalidParams,
+			"status_msg":  constant.StatusMsg_InvalidParams,
+		})
+		return
+	}
+
+	tx := types.Transaction{
+		TradeTime:  time.Now(),
+		TradePlace: transaction.TradePlace,
+		SellerName: transaction.SellerName,
+		SellerID:   transaction.SellerID,
+		BuyerName:  transaction.BuyerName,
+		BuyerID:    transaction.BuyerID,
+		Number:     transaction.Number,
+		Price:      transaction.Price,
+	}
+
+	fmt.Printf("tx:\n%+v\n", tx)
+
+	err := client.AddTransaction(transaction.FoodID, tx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"status_code": constant.StatusCode_CallBlockChainError,
+			"status_msg":  constant.StatusMsg_CallBalockChainError,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status_code":    constant.StatusCode_OK,
+		"status_message": constant.StatusMsg_OK,
+	})
 }
 
 func GetHistory(ctx *gin.Context) {
@@ -40,17 +75,16 @@ func GetHistory(ctx *gin.Context) {
 		log.Printf("[GetHistory] invalid params, \"food_id\" is not specified, params: %v\n", ctx.Params)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": http.StatusBadRequest,
-			"status_msg":  constant.StatusMsg_BadRequest,
+			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
 	}
 
-	product := Product{
-		FoodID:       foodID,
-		FoodName:     "土豆",
-		Birthday:     time.Now(),
-		BirthAddress: "BeiJing",
-		ShelfLife:    100,
+	product := types.Product{
+		FoodID:    1, // TODO: type of FoodID
+		FoodName:  "土豆",
+		Birthday:  time.Now(),
+		ShelfLife: 100,
 	}
 
 	log.Printf("[GetHistory] query transaction history for foodID=%s\n", foodID)
@@ -69,16 +103,6 @@ func GetHistory(ctx *gin.Context) {
 		"status_msg":          constant.StatusMsg_OK,
 		"product_info":        product,
 		"transaction_history": transactionHistory,
-	})
-}
-
-func AddTransaction(ctx *gin.Context) {
-	// 允许跨域
-	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"status_code":    constant.StatusCode_MethodONotImplemented,
-		"status_message": constant.StatusMsg_MethodNotImplemented,
 	})
 }
 
