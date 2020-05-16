@@ -45,7 +45,7 @@ func List(ctx *gin.Context) {
 		oneStatus, err := strconv.ParseInt(statusStr, 10, 32)
 		if err != nil || (oneStatus != model.UserStatus_Inactive && oneStatus != model.UserStatus_Active) {
 			ctx.JSON(http.StatusBadRequest, gin.H{
-				"status_code": http.StatusBadRequest,
+				"status_code": constant.StatusCode_InvalidParams,
 				"status_msg":  constant.StatusMsg_InvalidParams,
 			})
 			return

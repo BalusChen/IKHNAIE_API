@@ -32,7 +32,7 @@ func Register(ctx *gin.Context) {
 	if err := ctx.ShouldBind(&user); err != nil {
 		log.Printf("[UserRegister] invalid params: %v", ctx.Params)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": http.StatusBadRequest,
+			"status_code": constant.StatusCode_InvalidParams,
 			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
@@ -131,7 +131,7 @@ func operateAccessRight(ctx *gin.Context, operator int32) {
 		log.Printf("[operateAccessRight] invalid params: %v", ctx.Params)
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": http.StatusBadRequest,
+			"status_code": constant.StatusCode_InvalidParams,
 			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return

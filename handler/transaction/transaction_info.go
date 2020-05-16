@@ -74,7 +74,7 @@ func GetHistory(ctx *gin.Context) {
 	if !found {
 		log.Printf("[GetHistory] invalid params, \"food_id\" is not specified, params: %v\n", ctx.Params)
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"status_code": http.StatusBadRequest,
+			"status_code": constant.StatusMsg_InvalidParams,
 			"status_msg":  constant.StatusMsg_InvalidParams,
 		})
 		return
