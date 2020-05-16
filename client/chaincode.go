@@ -56,8 +56,6 @@ func (client *Client) Query(peer string, fcn string, args [][]byte) ([]byte, err
 		return nil, err
 	}
 
-	log.Printf("[QueryCC] Payload: %s\n", string(resp.Payload))
-
 	return resp.Payload, nil
 }
 
@@ -72,8 +70,6 @@ func (client *Client) Invoke(peer string, args [][]byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("[InvokeCC] payload: %s\n", string(resp.Payload))
 
 	return resp.Payload, nil
 }

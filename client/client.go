@@ -8,12 +8,6 @@ import (
 	"log"
 )
 
-const (
-	chaincodeName    = "ccikhnaie"
-	chaincodeVersion = "1.0"
-	channelName      = "mychannel"
-)
-
 type CCConfig struct {
 	CCID      string // chaincode ID, eq name
 	CCVersion string // chaincode version
