@@ -28,7 +28,7 @@ type productInfo struct {
 	QSID          string    `form:"qsid" binding:"required" json:"qsid"`                                               // 生产许可证编号
 	LOT           string    `form:"lot" binding:"required" json:"lot"`                                                 // 生产批次号
 	Description   string    `form:"description" json:"description"`                                                    // 产品描述
-	Image         string    `form:"image" json:"image"`                                                                // 图片
+	ImageUrl      string    `form:"image_url" json:"image_url"`                                                                // 图片
 }
 
 func GetInformation(ctx *gin.Context) {
@@ -72,7 +72,7 @@ func List(ctx *gin.Context) {
 		products[i].QSID = productModels[i].QSID
 		products[i].LOT = productModels[i].LOT
 		products[i].Description = productModels[i].Description
-		products[i].Image = fmt.Sprintf(imageUrlTpl, productModels[i].ID)
+		products[i].ImageUrl = fmt.Sprintf(imageUrlTpl, productModels[i].ID)
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
@@ -88,7 +88,7 @@ func AddProduct(ctx *gin.Context) {
 
 	var product productInfo
 	if err := ctx.ShouldBind(&product); err != nil {
-		log.Printf("[AddProduct] invalid params: %v, err: %v", ctx.Params, err)
+		log.Printf("[AddProduct] invalid params, err: %v", err)
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": constant.StatusCode_InvalidParams,
