@@ -57,6 +57,7 @@ func initTransactionRoutes(r *gin.RouterGroup) {
 	router := r.Group("transaction/")
 
 	router.GET("history", transaction.GetHistory)
+	router.GET("last", transaction.GetLastRecord)
 	router.GET("add", transaction.AddTransaction)
 }
 

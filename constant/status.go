@@ -24,4 +24,7 @@ const (
 	StatusMsg_InactiveUser   = "该用户尚未被准入，请联系管理员"
 
 	// Transaction-related status code and status message
+	StatusCode_TxBase              = StatusCode_Base + 200
+	StatusCode_CallBlockChainError = StatusCode_TxBase + 1
+	StatusMsg_CallBalockChainError = "调用区块链服务失败"
 )

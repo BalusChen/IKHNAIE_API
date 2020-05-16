@@ -1,9 +1,12 @@
 package transaction
 
 import (
+	"log"
 	"net/http"
 	"time"
 
+	"github.com/BalusChen/IKHNAIE_API/client"
+	"github.com/BalusChen/IKHNAIE_API/constant"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +23,7 @@ type Transaction struct {
 }
 
 type Product struct {
-	FoodID       int64     `json:"food_id"`       // 农产品 ID（唯一标识）
+	FoodID       string    `json:"food_id"`       // 农产品 ID（唯一标识）
 	FoodName     string    `json:"food_name"`     // 农产品名
 	BirthAddress string    `json:"birth_address"` // 产地
 	Birthday     time.Time `json:"birthday"`      // 生产日期
@@ -29,52 +32,62 @@ type Product struct {
 }
 
 func GetHistory(ctx *gin.Context) {
+	// 允许跨域
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	foodID, found := ctx.GetQuery("food_id")
+	if !found {
+		log.Printf("[GetHistory] invalid params, \"food_id\" is not specified, params: %v\n", ctx.Params)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status_code": http.StatusBadRequest,
+			"status_msg":  constant.StatusMsg_BadRequest,
+		})
+		return
+	}
+
 	product := Product{
-		FoodID:       1,
+		FoodID:       foodID,
 		FoodName:     "土豆",
 		Birthday:     time.Now(),
 		BirthAddress: "BeiJing",
 		ShelfLife:    100,
 	}
-	records := []Transaction{
-		{
-			time.Now(),
-			"BeiJing",
-			"Tom",
-			"1111111",
-			"Jerry",
-			"2222222",
-			501,
-			79,
-		},
-		{
-			time.Now().Add(time.Hour * 12),
-			"New York",
-			"Jerry",
-			"2222222",
-			"Sam",
-			"3333333",
-			300,
-			30,
-		},
-		{
-			time.Now().Add(time.Hour * 360),
-			"London",
-			"Sam",
-			"3333333",
-			"balus",
-			"4444444",
-			300,
-			90,
-		},
+
+	log.Printf("[GetHistory] query transaction history for foodID=%s\n", foodID)
+
+	transactionHistory, err := client.GetTransactionHistory(foodID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"status_code": constant.StatusCode_CallBlockChainError,
+			"status_msg":  constant.StatusMsg_CallBalockChainError,
+		})
+		return
 	}
+
 	ctx.JSON(http.StatusOK, gin.H{
+		"status_code":         constant.StatusCode_OK,
+		"status_msg":          constant.StatusMsg_OK,
 		"product_info":        product,
-		"transaction_history": records,
+		"transaction_history": transactionHistory,
 	})
 }
 
 func AddTransaction(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "TODO: add transaction")
+	// 允许跨域
+	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status_code":    constant.StatusCode_MethodONotImplemented,
+		"status_message": constant.StatusMsg_MethodNotImplemented,
+	})
+}
+
+func GetLastRecord(ctx *gin.Context) {
+	// 允许跨域
+	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status_code":    constant.StatusCode_MethodONotImplemented,
+		"status_message": constant.StatusMsg_MethodNotImplemented,
+	})
 }
