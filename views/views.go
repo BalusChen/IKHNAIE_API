@@ -21,6 +21,8 @@ func InitRoutes(e *gin.Engine) {
 		})
 	})
 
+	r.Static("assets/", "./assets")
+
 	initUserRoutes(r)
 	initAdminRoutes(r)
 	initProductRoutes(r)
@@ -50,6 +52,7 @@ func initProductRoutes(r *gin.RouterGroup) {
 	router := r.Group("product/")
 
 	router.GET("info", product.GetInformation)
+	router.GET("list", product.List)
 	router.POST("add", product.AddProduct)
 }
 
