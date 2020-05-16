@@ -1,4 +1,6 @@
 
+build:
+	go build -o ./output/main
 run:
 	go run main.go
 
