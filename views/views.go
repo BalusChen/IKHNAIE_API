@@ -52,7 +52,7 @@ func initTransactionRoutes(r *gin.RouterGroup) {
 
 	router.GET("history", transaction.GetHistory)
 	router.GET("last", transaction.GetLastRecord)
-	router.GET("add", transaction.AddTransaction)
+	router.POST("add", transaction.AddTransaction)
 }
 
 func initQRCodeRoutes(r *gin.RouterGroup) {
