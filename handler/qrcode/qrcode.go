@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	qrCodeUrlTpl     = "http://localhost:9877/ikhnaie/v1/assets/images/qrcode/%d.png"
-	qrCodePngTpl     = "assets/images/qrcode/%d.png"
+	qrCodeUrlTpl = "http://localhost:9877/ikhnaie/v1/assets/images/qrcode/%d.png"
+	qrCodePngTpl = "assets/images/qrcode/%d.png"
+	// FIXME: dynamic ip address?
 	qrCodeContentTpl = "http://192.168.43.29/ikhnaie/v1/qrcode/retrieve?food_id=%d"
 )
 
@@ -43,9 +44,9 @@ func Generate(ctx *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf(qrCodeContentTpl, foodID)
+	urlContent := fmt.Sprintf(qrCodeContentTpl, foodID)
 	qrcodeName := fmt.Sprintf(qrCodePngTpl, foodID)
-	err = qrcode.WriteFile(url, qrcode.Medium, 256, qrcodeName)
+	err = qrcode.WriteFile(urlContent, qrcode.Medium, 256, qrcodeName)
 	if err != nil {
 		log.Printf("[QRCodeGenerate] write qrcode to file failed, err: %v", err)
 
