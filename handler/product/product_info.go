@@ -18,6 +18,7 @@ const (
 )
 
 type productInfo struct {
+	ID            string    `json:"id"`                                                                                // 在数据库中的序号
 	Name          string    `form:"name" binding:"required" json:"name"`                                               // 农产品名
 	OwnerID       string    `form:"owner_id" binding:"required" json:"owner_id"`                                       // 所属人 ID
 	Specification string    `form:"specification" json:"specification"`                                                // 规格
@@ -28,7 +29,7 @@ type productInfo struct {
 	QSID          string    `form:"qsid" binding:"required" json:"qsid"`                                               // 生产许可证编号
 	LOT           string    `form:"lot" binding:"required" json:"lot"`                                                 // 生产批次号
 	Description   string    `form:"description" json:"description"`                                                    // 产品描述
-	ImageUrl      string    `form:"image_url" json:"image_url"`                                                                // 图片
+	ImageUrl      string    `json:"image_url"`                                                                         // 图片
 }
 
 func GetInformation(ctx *gin.Context) {
@@ -62,6 +63,7 @@ func List(ctx *gin.Context) {
 	// FIXME: bad code.
 	products := make([]productInfo, len(productModels))
 	for i := 0; i < len(productModels); i++ {
+		products[i].ID = fmt.Sprintf("%d", productModels[i].ID)
 		products[i].Name = productModels[i].Name
 		products[i].OwnerID = productModels[i].OwnerID
 		products[i].Specification = productModels[i].Specification
