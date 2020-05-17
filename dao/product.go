@@ -16,6 +16,16 @@ func AddProduct(ctx context.Context, product *model.Product) error {
 	return nil
 }
 
+func GetProductByID(ctx context.Context, foodID int64) (*model.Product, error) {
+	product := &model.Product{}
+	err := ikhnaieDB.Where("id = (?)", foodID).Find(product).Error
+	if err != nil {
+		log.Printf("[GetProductsByID] select from db failed, err: %v", err)
+		return nil, err
+	}
+	return product, nil
+}
+
 func GetProductsByUserID(ctx context.Context, ownerID string) ([]model.Product, error) {
 	var products []model.Product
 	err := ikhnaieDB.Where("owner_id = (?)", ownerID).Find(&products).Error
