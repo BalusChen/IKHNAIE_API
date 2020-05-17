@@ -1,6 +1,6 @@
 
 build:
-	go build -o ./output/main
+	go build -o ./output/ikhnaie
 run:
 	go run main.go
 
