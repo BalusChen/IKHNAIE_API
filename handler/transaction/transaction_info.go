@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -29,7 +28,7 @@ func AddTransaction(ctx *gin.Context) {
 
 	var transaction transactionInfo
 	if err := ctx.ShouldBind(&transaction); err != nil {
-		log.Printf("[AddTransaction] invalid params: %+v", ctx.Params)
+		log.Printf("[AddTransaction] bind params failed, err: %v", err)
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": constant.StatusCode_InvalidParams,
@@ -49,7 +48,7 @@ func AddTransaction(ctx *gin.Context) {
 		Price:      transaction.Price,
 	}
 
-	fmt.Printf("tx:\n%+v\n", tx)
+	log.Printf("[TransactionAdd] ready to do transaction: foodID: %s, tx: %+v", transaction.FoodID, tx)
 
 	err := client.AddTransaction(transaction.FoodID, tx)
 	if err != nil {

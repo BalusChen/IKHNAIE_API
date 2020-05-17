@@ -30,7 +30,7 @@ func Register(ctx *gin.Context) {
 	var user userInfo
 	// 检查参数是否正确
 	if err := ctx.ShouldBind(&user); err != nil {
-		log.Printf("[UserRegister] invalid params: %v", ctx.Params)
+		log.Printf("[UserRegister] bind params failed, err: %v", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": constant.StatusCode_InvalidParams,
 			"status_msg":  constant.StatusMsg_InvalidParams,
