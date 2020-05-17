@@ -13,19 +13,12 @@ import (
 func InitRoutes(e *gin.Engine) {
 	r := e.Group("ikhnaie/v1/")
 
-	r.GET("ping", func(ctx *gin.Context) {
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		ctx.JSON(http.StatusOK, gin.H{
-			"cartoon": "Tom and Jerry",
-			"names":   []string{"Tom", "Jerry", "Sam"},
-		})
-	})
-
 	initUserRoutes(r)
 	initAdminRoutes(r)
 	initProductRoutes(r)
 	initTransactionRoutes(r)
 	initQRCodeRoutes(r)
+	initMiscRoutes(r)
 }
 
 func initUserRoutes(r *gin.RouterGroup) {
@@ -50,6 +43,7 @@ func initProductRoutes(r *gin.RouterGroup) {
 	router := r.Group("product/")
 
 	router.GET("info", product.GetInformation)
+	router.GET("list", product.List)
 	router.POST("add", product.AddProduct)
 }
 
@@ -58,7 +52,7 @@ func initTransactionRoutes(r *gin.RouterGroup) {
 
 	router.GET("history", transaction.GetHistory)
 	router.GET("last", transaction.GetLastRecord)
-	router.GET("add", transaction.AddTransaction)
+	router.POST("add", transaction.AddTransaction)
 }
 
 func initQRCodeRoutes(r *gin.RouterGroup) {
@@ -66,4 +60,16 @@ func initQRCodeRoutes(r *gin.RouterGroup) {
 
 	router.GET("generate", qrcode.Generate)
 	router.GET("retrieve", qrcode.Retrieve)
+}
+
+func initMiscRoutes(r *gin.RouterGroup) {
+	r.GET("ping", func(ctx *gin.Context) {
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.JSON(http.StatusOK, gin.H{
+			"cartoon": "Tom and Jerry",
+			"names":   []string{"Tom", "Jerry", "Sam"},
+		})
+	})
+
+	r.Static("assets/", "./assets")
 }

@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -29,7 +28,7 @@ func AddTransaction(ctx *gin.Context) {
 
 	var transaction transactionInfo
 	if err := ctx.ShouldBind(&transaction); err != nil {
-		log.Printf("[AddTransaction] invalid params: %+v", ctx.Params)
+		log.Printf("[AddTransaction] bind params failed, err: %v", err)
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status_code": constant.StatusCode_InvalidParams,
@@ -49,7 +48,7 @@ func AddTransaction(ctx *gin.Context) {
 		Price:      transaction.Price,
 	}
 
-	fmt.Printf("tx:\n%+v\n", tx)
+	log.Printf("[TransactionAdd] ready to do transaction: foodID: %s, tx: %+v", transaction.FoodID, tx)
 
 	err := client.AddTransaction(transaction.FoodID, tx)
 	if err != nil {
@@ -80,13 +79,6 @@ func GetHistory(ctx *gin.Context) {
 		return
 	}
 
-	product := types.Product{
-		FoodID:    1, // TODO: type of FoodID
-		FoodName:  "土豆",
-		Birthday:  time.Now(),
-		ShelfLife: 100,
-	}
-
 	log.Printf("[GetHistory] query transaction history for foodID=%s\n", foodID)
 
 	transactionHistory, err := client.GetTransactionHistory(foodID)
@@ -101,7 +93,6 @@ func GetHistory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"status_code":         constant.StatusCode_OK,
 		"status_msg":          constant.StatusMsg_OK,
-		"product_info":        product,
 		"transaction_history": transactionHistory,
 	})
 }

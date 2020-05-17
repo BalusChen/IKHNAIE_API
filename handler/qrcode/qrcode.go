@@ -2,7 +2,6 @@ package qrcode
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,11 +12,15 @@ import (
 )
 
 const (
-	qrCodeURLTpl = "192.168.1.5:9877/ikhnaie/v1/qrcode/retrieve?food_id=%d"
-	qrCodePngTpl = "assets/images/qrcode/%d.png"
+	qrCodeUrlTpl     = "http://localhost:9877/ikhnaie/v1/assets/images/qrcode/%d.png"
+	qrCodePngTpl     = "assets/images/qrcode/%d.png"
+	qrCodeContentTpl = "http://192.168.43.29/ikhnaie/v1/qrcode/retrieve?food_id=%d"
 )
 
 func Generate(ctx *gin.Context) {
+	// 允许跨域
+	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	foodIDStr, ok := ctx.GetQuery("food_id")
 	if !ok {
 		log.Print("[QRCodeGenerate] no food_id specified")
@@ -40,7 +43,7 @@ func Generate(ctx *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf(qrCodeURLTpl, foodID)
+	url := fmt.Sprintf(qrCodeContentTpl, foodID)
 	qrcodeName := fmt.Sprintf(qrCodePngTpl, foodID)
 	err = qrcode.WriteFile(url, qrcode.Medium, 256, qrcodeName)
 	if err != nil {
@@ -53,8 +56,11 @@ func Generate(ctx *gin.Context) {
 		return
 	}
 
-	data, _ := ioutil.ReadFile(qrcodeName)
-	_, _ = ctx.Writer.Write(data)
+	ctx.JSON(http.StatusOK, gin.H{
+		"qrcode_url":  fmt.Sprintf(qrCodeUrlTpl, foodID),
+		"status_code": constant.StatusCode_OK,
+		"status_msg":  constant.StatusMsg_OK,
+	})
 }
 
 func Retrieve(ctx *gin.Context) {
