@@ -1,6 +1,7 @@
 package views
 
 import (
+	"github.com/BalusChen/IKHNAIE_API/handler/blockchain"
 	"net/http"
 
 	"github.com/BalusChen/IKHNAIE_API/handler/product"
@@ -18,6 +19,7 @@ func InitRoutes(e *gin.Engine) {
 	initProductRoutes(r)
 	initTransactionRoutes(r)
 	initQRCodeRoutes(r)
+	initBlockchainRoutes(r)
 	initMiscRoutes(r)
 }
 
@@ -60,6 +62,12 @@ func initQRCodeRoutes(r *gin.RouterGroup) {
 
 	router.GET("generate", qrcode.Generate)
 	router.GET("retrieve", qrcode.Retrieve)
+}
+
+func initBlockchainRoutes(r *gin.RouterGroup) {
+	router := r.Group("blockchain/")
+
+	router.GET("chaincode/list", blockchain.ListChainCode)
 }
 
 func initMiscRoutes(r *gin.RouterGroup) {
