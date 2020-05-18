@@ -17,7 +17,7 @@ const (
 	qrCodeUrlTpl = "http://localhost:9877/ikhnaie/v1/assets/images/qrcode/%d.png"
 	qrCodePngTpl = "assets/images/qrcode/%d.png"
 	// FIXME: dynamic ip address?
-	qrCodeContentTpl = "http://192.168.43.29/ikhnaie/v1/qrcode/retrieve?food_id=%d"
+	qrCodeContentTpl = "http://192.168.43.29:8080/transaction/history/%d"
 )
 
 func Generate(ctx *gin.Context) {
