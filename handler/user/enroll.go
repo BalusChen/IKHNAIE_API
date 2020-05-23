@@ -155,6 +155,7 @@ func operateAccessRight(ctx *gin.Context, operator int32) {
 			"status_code": http.StatusInternalServerError,
 			"status_msg":  constant.StatusMsg_ServerInternalError,
 		})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
