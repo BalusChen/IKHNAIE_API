@@ -17,6 +17,7 @@ const (
 )
 
 type userInfo struct {
+	Type         int32  `json:"type"`
 	UserName     string `form:"username" json:"username" binding:"required"`
 	UserID       string `form:"user_id" json:"user_id" binding:"required"`
 	Password     string `form:"password" json:"password" binding:"required"`
@@ -109,6 +110,7 @@ func Login(ctx *gin.Context) {
 	_ = dao.UpdateUserLastLoginTime(ctx, userModel.UserID, time.Now())
 
 	user := userInfo{
+		Type:         userModel.Type,
 		UserName:     userModel.UserName,
 		UserID:       userModel.UserID,
 		Password:     userModel.Password,

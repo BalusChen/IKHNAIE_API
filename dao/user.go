@@ -64,7 +64,7 @@ func GetUser(ctx context.Context, userName, userId string) (bool, error) {
 
 func GetUsersByStatus(ctx context.Context, status []int32) ([]*model.User, error) {
 	var users []*model.User
-	err := ikhnaieDB.Where("status in (?)", status).Find(&users).Error
+	err := ikhnaieDB.Where("status in (?) and type = (?)", status, 2).Find(&users).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
