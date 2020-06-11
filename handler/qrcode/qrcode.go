@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/BalusChen/IKHNAIE_API/client"
@@ -48,15 +49,18 @@ func Generate(ctx *gin.Context) {
 
 	urlContent := fmt.Sprintf(qrCodeContentTpl, foodID)
 	qrcodeName := fmt.Sprintf(qrCodePngTpl, foodID)
-	err = qrcode.WriteFile(urlContent, qrcode.Medium, 256, qrcodeName)
-	if err != nil {
-		log.Printf("[QRCodeGenerate] write qrcode to file failed, err: %v", err)
+	_, err = os.Stat(qrcodeName)
+	if err != nil && !os.IsExist(err) {
+		err = qrcode.WriteFile(urlContent, qrcode.Medium, 256, qrcodeName)
+		if err != nil {
+			log.Printf("[QRCodeGenerate] write qrcode to file failed, err: %v", err)
 
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"status_code": http.StatusInternalServerError,
-			"status_msg":  constant.StatusMsg_ServerInternalError,
-		})
-		return
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"status_code": http.StatusInternalServerError,
+				"status_msg":  constant.StatusMsg_ServerInternalError,
+			})
+			return
+		}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
