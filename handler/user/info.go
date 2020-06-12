@@ -24,10 +24,26 @@ func Info(ctx *gin.Context) {
 	// 允许跨域
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
-	// TODO: get user from db
+	uid, ok := ctx.GetQuery("uid")
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status_code": constant.StatusCode_InvalidParams,
+			"status_msg":  constant.StatusMsg_InvalidParams,
+		})
+		return
+	}
+
+	user := dao.GetUserByUserID(ctx, uid)
+	if user == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"status_code": constant.StatusCode_InvalidParams,
+			"status_msg":  constant.StatusMsg_InvalidParams,
+		})
+		return
+	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"user":        1,
+		"user":        user,
 		"status_code": constant.StatusCode_MethodONotImplemented,
 		"status_msg":  constant.StatusMsg_MethodNotImplemented,
 	})
